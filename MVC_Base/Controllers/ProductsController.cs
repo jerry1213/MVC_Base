@@ -9,6 +9,8 @@ using MVC_Base.Models;
 
 namespace MVC_Base.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class ProductsController : Controller
     {
         private readonly NorthwindContext _context;
@@ -68,17 +70,41 @@ namespace MVC_Base.Controllers
         }
 
         // GET: Products/Create
-        // GET: Products/Create
-        public IActionResult Create()
-        {
-            ViewData["CategoryID"] = new SelectList(_context.Categories, "CategoryID", "CategoryName");
-            ViewData["SupplierID"] = new SelectList(_context.Suppliers, "SupplierID", "CompanyName");
-            return View();
-        }
+        //public IActionResult Create()
+        //{
+        //    ViewData["CategoryID"] = new SelectList(_context.Categories, "CategoryID", "CategoryName");
+        //    ViewData["SupplierID"] = new SelectList(_context.Suppliers, "SupplierID", "CompanyName");
+        //    return View();
+        //}
 
         // POST: Products/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create(ProductsViewModel products)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        _context.Add(products);
+        //        await _context.SaveChangesAsync();
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    ViewData["CategoryID"] = new SelectList(_context.Categories, "CategoryID", "CategoryName", products.CategoryID);
+        //    ViewData["SupplierID"] = new SelectList(_context.Suppliers, "SupplierID", "CompanyName", products.SupplierID);
+        //    return View(products);
+        //}
+
+        // GET: api/Products/Create
+        [HttpGet]
+        public IActionResult Create()
+        {
+            ViewData["CategoryID"] = new SelectList(_context.Categories, "CategoryID", "CategoryName");
+            ViewData["SupplierID"] = new SelectList(_context.Suppliers, "SupplierID", "CompanyName");
+            return View("Create");
+        }
+
+        // POST: api/Products
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductsViewModel products)
@@ -91,7 +117,7 @@ namespace MVC_Base.Controllers
             }
             ViewData["CategoryID"] = new SelectList(_context.Categories, "CategoryID", "CategoryName", products.CategoryID);
             ViewData["SupplierID"] = new SelectList(_context.Suppliers, "SupplierID", "CompanyName", products.SupplierID);
-            return View(products);
+            return View("Create", products);
         }
 
         // GET: Products/Edit/5
