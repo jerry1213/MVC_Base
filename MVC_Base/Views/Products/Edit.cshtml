@@ -58,8 +58,9 @@
                     <input class="form-check-input" asp-for="Discontinued" /> @Html.DisplayNameFor(model => model.Discontinued)
                 </label>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+            <div class="form-group"> 
+                @* <input type="submit" value="updateButton" class="btn btn-primary" /> *@
+                <button type="button" id="updateButton" class="btn btn-danger">Edit</button>
             </div>
         </form>
     </div>
@@ -71,4 +72,41 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#updateButton').click(function () {
+                var data = {
+                    productID: $('#ProductID').val(),
+                    productName: $('#ProductName').val(),
+                    supplierID: $('#SupplierID').val(),
+                    categoryID: $('#CategoryID').val(),
+                    quantityPerUnit: $('#QuantityPerUnit').val(),
+                    unitPrice: $('#UnitPrice').val(),
+                    unitsInStock: $('#UnitsInStock').val(),
+                    unitsOnOrder: $('#UnitsOnOrder').val(),
+                    reorderLevel: $('#ReorderLevel').val(),
+                    discontinued: $('#Discontinued').is(':checked')
+                };
+
+                $.ajax({
+                    url: '/api/ProductAPI/' + data.productID,
+                    type: 'PUT',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function (result) {
+                        debugger
+                        alert("Product updated successfully!");
+                        //window.location.href = '/Products/Index'; // Redirect after success
+                    },
+                    error: function (xhr, status, error) {
+                        alert('Error: ' + error);
+                    }
+                }).done(function () {
+                    window.location.href = '/Products/Index'; // 重定向到产品列表页面
+                });;
+            });
+        });
+    </script>
 }

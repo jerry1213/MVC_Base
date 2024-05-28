@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MVC_Base.Models;
+using MVC_Base.ViewModel;
 
 namespace MVC_Base.APIController
 {
@@ -37,19 +38,51 @@ namespace MVC_Base.APIController
             return product;
         }
 
-        // POST: api/products
+        //// POST: api/products
+        //[HttpPost]
+        //public async Task<ActionResult<Products>> CreateProduct([FromBody] Products product)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+
+        //    _context.Products.Add(product);
+        //    await _context.SaveChangesAsync();
+
+        //    return CreatedAtAction(nameof(GetProduct), new { id = product.ProductID }, product);
+        //}
         [HttpPost]
-        public async Task<ActionResult<Products>> CreateProduct([FromBody] Products product)
+        public async Task<ActionResult<ReqCreateProductViewModel>> CreateProduct([FromBody] ReqCreateProductViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
+            // 找到對應的供應商和類別
+            var supplier = await _context.Suppliers.FirstOrDefaultAsync(s => s.CompanyName == viewModel.Supplier);
+            var category = await _context.Categories.FirstOrDefaultAsync(c => c.CategoryName == viewModel.Category);
+
+            if (supplier == null || category == null)
+            {
+                return BadRequest("Supplier or Category not found.");
+            }
+
+            // 創建產品模型
+            var product = new Products
+            {
+                ProductName = viewModel.ProductName,
+                SupplierID = supplier.SupplierID,
+                CategoryID = category.CategoryID,
+                QuantityPerUnit = viewModel.QuantityPerUnit,
+                Discontinued = viewModel.Discontinued
+            };
+
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetProduct), new { id = product.ProductID }, product);
+            return NoContent();
         }
 
         // PUT: api/products/{id}

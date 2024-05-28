@@ -36,7 +36,8 @@
                 </label>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+               @*  <input type="submit" value="createButton" class="btn btn-primary" /> *@
+                <button type="button" id="createButton" class="btn btn-danger">Create</button>
             </div>
         </form>
     </div>
@@ -47,5 +48,43 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#createButton').click(function () {
+                var productName = $('#ProductName').val();
+                var supplierName = $('#SupplierID option:selected').text();
+                var categoryName = $('#CategoryID option:selected').text();
+                var quantityPerUnit = $('#QuantityPerUnit').val();
+                var discontinued = $('#Discontinued').is(':checked');
+
+                var data = {
+                    productName: productName,
+                    supplier: supplierName,
+                    category: categoryName,
+                    quantityPerUnit: quantityPerUnit,
+                    discontinued: discontinued
+                };
+
+                $.ajax({
+                    url: '/api/ProductAPI',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function (result) {
+                        alert("Product created successfully!");
+                    },
+                    error: function (xhr, status, error) {
+                        alert('Error: ' + error);
+                    }
+                }).done(function () {
+                    window.location.href = '/Products/Index'; // 重定向到产品列表页面
+                });;
+            });
+        });
+    </script>
 }

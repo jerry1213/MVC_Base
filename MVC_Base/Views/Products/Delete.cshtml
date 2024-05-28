@@ -68,8 +68,33 @@
     </dl>
     
     <form asp-action="Delete">
-        <input type="hidden" asp-for="ProductID" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        @* <input type="hidden" asp-for="ProductID" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> | *@
+        <input type="hidden" id="ProductID" value="@Model.ProductID" />
+        <button type="button" id="deleteButton" class="btn btn-danger">Delete</button> |
         <a asp-action="Index">Back to List</a>
     </form>
 </div>
+
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#deleteButton').click(function () {
+                var productId = $('#ProductID').val();
+                $.ajax({
+                    url: '/api/ProductAPI/' + productId,
+                    type: 'DELETE',
+                    success: function (result) {
+                        alert("Product delete successfully!");
+                    },
+                    error: function (xhr, status, error) {
+                        alert('Error: ' + error);
+                    }
+                }).done(function () {
+                    window.location.href = '/Products/Index'; // 重定向到产品列表页面
+                });;
+            });
+        });
+    </script>
+}
