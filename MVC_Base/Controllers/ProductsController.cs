@@ -9,8 +9,6 @@ using MVC_Base.Models;
 
 namespace MVC_Base.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
     public class ProductsController : Controller
     {
         private readonly NorthwindContext _context;
@@ -69,32 +67,6 @@ namespace MVC_Base.Controllers
             return View(product); // 返回視圖
         }
 
-        // GET: Products/Create
-        //public IActionResult Create()
-        //{
-        //    ViewData["CategoryID"] = new SelectList(_context.Categories, "CategoryID", "CategoryName");
-        //    ViewData["SupplierID"] = new SelectList(_context.Suppliers, "SupplierID", "CompanyName");
-        //    return View();
-        //}
-
-        // POST: Products/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create(ProductsViewModel products)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        _context.Add(products);
-        //        await _context.SaveChangesAsync();
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    ViewData["CategoryID"] = new SelectList(_context.Categories, "CategoryID", "CategoryName", products.CategoryID);
-        //    ViewData["SupplierID"] = new SelectList(_context.Suppliers, "SupplierID", "CompanyName", products.SupplierID);
-        //    return View(products);
-        //}
-
         // GET: api/Products/Create
         [HttpGet]
         public IActionResult Create()
@@ -107,7 +79,7 @@ namespace MVC_Base.Controllers
         // POST: api/Products
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ProductsViewModel products)
+        public async Task<IActionResult> Create(Products products)
         {
             if (ModelState.IsValid)
             {
@@ -138,42 +110,7 @@ namespace MVC_Base.Controllers
             return View(products);
         }
 
-        // POST: Products/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, ProductsViewModel products)
-        {
-            if (id != products.ProductID)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(products);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProductsExists(products.ProductID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CategoryID"] = new SelectList(_context.Categories, "CategoryID", "CategoryName", products.CategoryID);
-            ViewData["SupplierID"] = new SelectList(_context.Suppliers, "SupplierID", "CompanyName", products.SupplierID);
-            return View(products);
-        }
+        
 
         // GET: Products/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -195,20 +132,7 @@ namespace MVC_Base.Controllers
             return View(products);
         }
 
-        // POST: Products/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var products = await _context.Products.FindAsync(id);
-            if (products != null)
-            {
-                _context.Products.Remove(products);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+        
 
         private bool ProductsExists(int id)
         {

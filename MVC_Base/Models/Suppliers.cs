@@ -31,5 +31,5 @@ public partial class Suppliers
 
     public string HomePage { get; set; }
 
-    public virtual ICollection<ProductsViewModel> Products { get; set; } = new List<ProductsViewModel>();
+    public virtual ICollection<Products> Products { get; set; } = new List<Products>();
 }
